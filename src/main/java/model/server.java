@@ -5,9 +5,19 @@
  */
 package model;
 
+import java.awt.Component;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,11 +44,14 @@ public class server {
     private ArrayList<node> listNode = new ArrayList<node>();
     private JFrame mainFrame;
     private JTextPane textPane;
+    private JTextPane tpChatbox;
     private JTextField tfMsg;
     private JButton btnCheckCoor;
     private boolean flagBully=true;
+    private String msgText = "";
+    private String LogContain = "";
 
-    public server(JFrame mainFrame,int port,int id,JTextPane pane,JTextField tf,JButton btn) {
+    public server(JFrame mainFrame,int port,int id,JTextPane pane,JTextPane chat,JTextField tf,JButton btn) {
         this.mainFrame = mainFrame;
         this.Port = port;
         this.Id = id;
@@ -46,6 +59,7 @@ public class server {
         this.textPane = pane;
         this.tfMsg = tf;
         this.btnCheckCoor = btn;
+        this.tpChatbox = chat;
     }
 
 
@@ -162,9 +176,9 @@ public class server {
             default:
                 break;
             }
-            tfMsg.setText("");
-            tfMsg.setEditable(true);
-            btnCheckCoor.setEnabled(true);
+//            tfMsg.setText("");
+//            tfMsg.setEditable(true);
+//            btnCheckCoor.setEnabled(true);
             return;
         }
         //--- day la TH khong co tien trinh nao co Id cao hon => gui xac nhan minh chinh la dieu phoi vien
@@ -237,10 +251,23 @@ public class server {
     }    
     //----get coordiantor----
     public node getCoordinator(){
+        node max=null;
         for(node i:listNode){
             if(i.isIsAdmin()){
                 return i;
             }
+            if(i.getId()>Id){
+                try {
+                    Socket sk = new Socket(i.getHost(),i.getPort());
+                    max=i;
+                    sk.close();
+                } catch (Exception e) {}
+            }
+        }
+        if(max != null){
+            node tmp = max;tmp.setIsAdmin(true);
+            listNode.set(listNode.indexOf(max), tmp);
+            return max;
         }
         return null;
     }
@@ -258,10 +285,11 @@ public class server {
             DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
             writer.writeUTF("check-"+Id+"-"+msg);
             System.out.println("checkCoordinator send - "+msg);
-//            JOptionPane.showMessageDialog(this.mainFrame, "", "Show message", Port);
             String rev = reader.readUTF();
             System.out.println("checkCoordinator rev-"+rev);
-            tpSettext(getCurrentTime()+":"+n.getId()+": "+rev);
+            LogContain+=getCurrentTime()+":"+n.getId()+":"+msg+"\n";
+            tpSettext(textPane,getCurrentTime()+":"+n.getId()+": "+rev);
+            tpSetMessage(tpChatbox, msg,0);
             reader.close();
             writer.close();
             socket.close();
@@ -274,9 +302,32 @@ public class server {
         }
     }
 //--- text panel settext
-    public void tpSettext(String txt){
-        String current = textPane.getText();
-        textPane.setText(current+"\n"+txt);
+    public void tpSettext(JTextPane pane,String txt){
+        String current = pane.getText();
+        pane.setText(txt+"\n"+current);
+        LogContain+=txt+"\n";
+    }
+    public void tpSetMessage(JTextPane pane,String msg,int opt){
+        if(opt==0){
+            msgText+="<h3 style=\"margin-left:150px;background-color:#0984e3;color:#fff;padding:5px;\">"+msg+"</h3>";
+        }else{
+            msgText+="<h3 style=\"margin-right:150px;background-color:#636e72;color:#fff;padding:5px;\">"+msg+"</h3>";
+        }
+        pane.setText("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                    "<style>body {color: #fff;}</style></head>\n"+"<body>\n" +
+                    msgText+"</body>\n"+"</html>");
+    }
+    public void WriteLog(String filename) throws IOException{
+        //File f = new File("C:\\Users\\Admin\\OneDrive\\Documents\\java_netbeans\\MulticartSocket\\src\\main\\java\\log\\"+filename);
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter("C:\\Users\\Admin\\OneDrive\\Documents\\java_netbeans\\MulticartSocket\\src\\main\\java\\log\\"+filename,true));
+            pw.println(LogContain);
+            pw.flush();
+            pw.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 //--- get current time
     public String getCurrentTime(){
@@ -296,12 +347,25 @@ public class server {
                 String [] list = msg.split("-");
                 switch(list[0]){
                     case "check":
-                        tpSettext(getCurrentTime()+":"+list[1]+": "+msg);
+                        tpSettext(textPane,getCurrentTime()+":"+list[1]+": "+msg);
                         //---check xem m co phai dieu phoi vien khong
                         if(getCoordinator().getId() == Id){
                             if(Integer.parseInt(list[1])<Id){
+                                tpSetMessage(tpChatbox,list[1]+": "+list[2],1);
                                 System.out.println("receive from client: "+msg);
                                 writer.writeUTF("response from server");
+                                for(node i:listNode){
+                                    if(i.getId()<Id && i.getId()!= Integer.parseInt(list[1])){
+                                        try {
+                                            Socket msgSocket = new Socket(i.getHost(),i.getPort());
+                                            DataOutputStream w = new DataOutputStream(msgSocket.getOutputStream());
+                                            w.writeUTF("message-"+list[1]+"-"+list[2]);
+                                            w.close();
+                                            msgSocket.close();
+                                        } catch (Exception e) {
+                                        }
+                                    }
+                                }
                                 return;
                             }
                             else{
@@ -316,11 +380,7 @@ public class server {
                                         listNode.set(listNode.indexOf(item), tmpnode);
                                     }
                                 });
-                                //-1
                                 bully(1);
-                                //--- thay doi co`
-                                //if(flagBully) flagBully=false;
-                                //--can chay giai thuat bully tai day
                                 return;
                             }
                         }
@@ -331,7 +391,7 @@ public class server {
                             //---bau chon bully tai day---
                         }
                     case "election":
-                        tpSettext(getCurrentTime()+":"+list[1]+": "+msg);
+                        tpSettext(textPane,getCurrentTime()+":"+list[1]+": "+msg);
                         writer.writeUTF("answer-"+Id);
                         try {
                             node n=null;
@@ -372,11 +432,11 @@ public class server {
                         //bully(2);
                         return;
                     case "answer":
-                        tpSettext(getCurrentTime()+":"+list[1]+": "+msg);
+                        tpSettext(textPane,getCurrentTime()+":"+list[1]+": "+msg);
                         System.out.println("Da nhan duoc cau tra loi");
                         break;
                     case "coordinator":
-                        tpSettext(getCurrentTime()+":"+list[1]+": "+msg);
+                        tpSettext(textPane,getCurrentTime()+":"+list[1]+": "+msg);
                         //--- set lai dieu phoi vien ---
                         System.out.println("receive-coordinator "+msg);
                         int t=0,f=0;
@@ -396,7 +456,10 @@ public class server {
                         tfMsg.setEditable(true);
                         btnCheckCoor.setEnabled(true);
                         //flagBully=false;
-                        JOptionPane.showMessageDialog(mainFrame, "Coordinator has id: "+list[1]);
+                        JOptionPane.showMessageDialog(mainFrame, "Coordinator có id: "+list[1]);
+                        break;
+                    case "message":
+                        tpSetMessage(tpChatbox, list[1]+" : "+list[2], 1);
                         break;
                     default:
                         break;

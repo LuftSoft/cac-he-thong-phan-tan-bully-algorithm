@@ -1,0 +1,50 @@
+
+21:05:25 05/12/2022:4: answer-4
+21:05:27 05/12/2022:4: coordinator-4
+21:05:31 05/12/2022:4:hello
+21:05:31 05/12/2022:4: response from server
+21:05:36 05/12/2022:4:logging here
+21:05:36 05/12/2022:4: response from server
+21:05:37 05/12/2022:4:logging here
+21:05:37 05/12/2022:4: response from server
+21:05:37 05/12/2022:4:logging here
+21:05:37 05/12/2022:4: response from server
+21:05:37 05/12/2022:4:logging here
+21:05:37 05/12/2022:4: response from server
+21:05:38 05/12/2022:4:logging here
+21:05:38 05/12/2022:4: response from server
+21:05:38 05/12/2022:4:logging here
+21:05:38 05/12/2022:4: response from server
+21:05:38 05/12/2022:4:logging here
+21:05:38 05/12/2022:4: response from server
+21:05:39 05/12/2022:4:logging here
+21:05:39 05/12/2022:4: response from server
+21:05:39 05/12/2022:4:logging here
+21:05:39 05/12/2022:4: response from server
+
+21:06:08 05/12/2022:4: answer-4
+21:06:12 05/12/2022:4: coordinator-4
+21:06:24 05/12/2022:4:logging test again hihi
+21:06:24 05/12/2022:4: response from server
+21:06:24 05/12/2022:4:logging test again hihi
+21:06:24 05/12/2022:4: response from server
+
+21:16:05 05/12/2022:4:hello server
+21:16:05 05/12/2022:4: response from server
+21:16:07 05/12/2022:4:hello server
+21:16:07 05/12/2022:4: response from server
+21:16:08 05/12/2022:4:hello server
+21:16:08 05/12/2022:4: response from server
+21:16:08 05/12/2022:4:hello server
+21:16:08 05/12/2022:4: response from server
+21:16:16 05/12/2022:4:hello server, toi la ngoc
+21:16:16 05/12/2022:4: response from server
+21:16:17 05/12/2022:4:hello server, toi la ngoc
+21:16:17 05/12/2022:4: response from server
+
+21:18:56 05/12/2022:4: coordinator-4
+21:19:36 05/12/2022:4:test message
+21:19:36 05/12/2022:4: response from server
+21:19:47 05/12/2022:4:hello
+21:19:47 05/12/2022:4: response from server
+

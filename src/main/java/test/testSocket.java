@@ -5,73 +5,27 @@
  */
 package test;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Set;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+//  www .  ja  va 2s  .  c o  m
 
-/**
- *
- * @author Admin
- */
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class testSocket {
-    private ArrayList<String> list = new ArrayList<String>();
-    private int k=0;
-    public ArrayList<String> getList(){
-        return list;
-    }
-    public testSocket(){
-        list.add("12");
-        list.add("ba");
-        list.add("me");
-        list.add("anh");
-        list.add("chi");
-    }
-    public static void main(String[] args) throws IOException {
-//        try {
-//            Socket socket = new Socket("127.0.0.1",3000);
-//        } catch (Exception e) {
-//            System.out.println("error");
-//        }
-          /*
-          testSocket test = new testSocket();
-          test.getList().forEach(i->{
-              if(i.equals("12")){
-                  test.getList().set(test.getList().indexOf(i), i);
-              }
-          });
-          test.getList().forEach(i->{
-              System.out.print(i+" - ");
-          });
-          */
-          
-          //--------test multi thread-------
-          testSocket test = new testSocket();
-//          for(int i=0;i<3;i++){
-//              Thread th = new Thread(){
-//                  public void run(){
-//                      test.k++;
-//                      System.out.println("k bang: "+test.k);
-//                  }
-//              };
-//              th.start();
-//          }
-            /*
-            for(String s:test.list){
-                if(s.equals("12")) test.list.set(test.list.indexOf(s), "change");
-            }
-            for(String s:test.list){
-                System.out.print(s+"-");
-            }
-            */
-            /*DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
-            LocalDateTime date = LocalDateTime.now();
-            System.out.println(format.format(date));*/
-            boolean c=false;
-            while(!c){System.out.println("c");c=true;}
-            //System.out.println("k final bang: "+test.k);
-          
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+        FileWriter bwr = new FileWriter("C:\\Users\\Admin\\OneDrive\\Documents\\java_netbeans\\MulticartSocket\\src\\main\\java\\log\\FirstNode.txt",true);
+        PrintWriter pw = new PrintWriter(bwr);
+        pw.println("add more text");
+        pw.flush();
+        pw.close();
     }
 }

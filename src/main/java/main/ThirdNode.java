@@ -47,6 +47,8 @@ public class ThirdNode extends javax.swing.JFrame {
         tfSendToCoordinator = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         tpLog = new javax.swing.JTextPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tpChatbox = new javax.swing.JTextPane();
         lbServerStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -83,29 +85,35 @@ public class ThirdNode extends javax.swing.JFrame {
         tpLog.setEditable(false);
         jScrollPane3.setViewportView(tpLog);
 
+        jScrollPane2.setViewportView(tpChatbox);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tfSendToCoordinator, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSendToCoordinator, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(btnSendToCoordinator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfSendToCoordinator)
-                    .addComponent(btnSendToCoordinator, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfSendToCoordinator)
+                            .addComponent(btnSendToCoordinator, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -127,7 +135,7 @@ public class ThirdNode extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
-                        .addComponent(lbServerStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)))
+                        .addComponent(lbServerStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -143,7 +151,7 @@ public class ThirdNode extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -156,7 +164,7 @@ public class ThirdNode extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "please type number of server port", "warning", JOptionPane.WARNING_MESSAGE);
         }
         else{
-            this.sv = new server(this,3003,2,this.tpLog,this.tfSendToCoordinator,this.btnSendToCoordinator);
+            this.sv = new server(this,3003,2,this.tpLog,tpChatbox,this.tfSendToCoordinator,this.btnSendToCoordinator);
             this.sv.execute();
             this.lbServerStatus.setText("server is running on port "+tfPort.getText());
             this.btnConnect.setEnabled(false);
@@ -237,12 +245,14 @@ public class ThirdNode extends javax.swing.JFrame {
     private javax.swing.JButton btnSendToCoordinator;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbPort;
     private javax.swing.JLabel lbServerStatus;
     private javax.swing.JTextField tfPort;
     private javax.swing.JTextField tfSendToCoordinator;
+    private javax.swing.JTextPane tpChatbox;
     private javax.swing.JTextPane tpLog;
     // End of variables declaration//GEN-END:variables
 }
