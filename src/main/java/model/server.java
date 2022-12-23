@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -29,9 +30,12 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.ThirdNode;
+import service.connection;
 
 /**
  *
@@ -49,7 +53,12 @@ public class server {
     private JButton btnCheckCoor;
     private boolean flagBully=true;
     private String msgText = "";
-    private String LogContain = "";
+    public String LogContain = "";
+    //luu giu danh sach cac yeu cau chuyen tien
+    private Queue<SendMoney> messageQueue;
+    //ket noi data base
+    private Connection conn;
+    public connection connectService;
 
     public server(JFrame mainFrame,int port,int id,JTextPane pane,JTextPane chat,JTextField tf,JButton btn) {
         this.mainFrame = mainFrame;
@@ -60,6 +69,9 @@ public class server {
         this.tfMsg = tf;
         this.btnCheckCoor = btn;
         this.tpChatbox = chat;
+        this.messageQueue = new LinkedList<>();
+        this.connectService = new connection();
+        this.conn = connectService.getConnection();
     }
 
 
@@ -83,6 +95,7 @@ public class server {
     public void setListNode(ArrayList<node> listNode) {this.listNode = listNode;}
 
     public void setMainFrame(JFrame mainFrame) {this.mainFrame = mainFrame;}
+    public Queue<SendMoney> getMessageQueue(){return this.messageQueue;}
     //---getter,setter
     //----execute----
     public void execute(){
@@ -94,12 +107,8 @@ public class server {
                     while(true){
                         Socket socket = server.accept();
                         System.out.println("Da ket noi voi "+socket);
-//                        receive r = new receive(socket,server.this);
-//                        r.start();
                         receive(socket);
-//                        if(!flagBully){
-//                            bully(2);
-//                        }
+                        queueResolve();
                     }
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(mainFrame, "Khong the tao server: "+Id);
@@ -109,7 +118,8 @@ public class server {
         };
         th.start();
     }
-    //----bully----
+    //----bully algorithm----
+    //#bully
     public void bully(int opt){
         //if(flagBully){return;}
         switch(opt){
@@ -176,9 +186,6 @@ public class server {
             default:
                 break;
             }
-//            tfMsg.setText("");
-//            tfMsg.setEditable(true);
-//            btnCheckCoor.setEnabled(true);
             return;
         }
         //--- day la TH khong co tien trinh nao co Id cao hon => gui xac nhan minh chinh la dieu phoi vien
@@ -193,14 +200,12 @@ public class server {
           }
         }
         JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc! Bạn chính là điều phối viên mới.", "Thông báo", JOptionPane.DEFAULT_OPTION);
-        tfMsg.setText("");
-        tfMsg.setEditable(false);
-        btnCheckCoor.setEnabled(false);
         //--- gui xac nhan dieu phoi vien moi
         Coordinator();
         //flagBully = true;
     }
     //--- Gửi phản hồi nếu nhận ra mình là điều phối viên----
+    //#coordinatoor
     public void Coordinator(){
         for(node n : listNode){
             if(Id != n.getId()){
@@ -227,13 +232,9 @@ public class server {
         }
     }
     //----init list node----
+    //----#initnode----
     public void initListNode(){
         try {
-                //            for(int i=0;i<5;i++){
-                //                node n = new node(3000+i,"127.0.0.1",i,false);
-                //                this.listNode.add(n);
-                //            }
-                
                 node n = new node(3000,"127.0.0.1",0,false);
                 node n1 = new node(3002,"127.0.0.1",1,false);
                 node n2 = new node(3003,"127.0.0.1",2,false);
@@ -250,6 +251,7 @@ public class server {
         }
     }    
     //----get coordiantor----
+    //#getcoordiantor
     public node getCoordinator(){
         node max=null;
         for(node i:listNode){
@@ -271,7 +273,8 @@ public class server {
         }
         return null;
     }
-    //----
+    //---------------kiem tra dieu phoi vien-----------
+    //#checkcoordinator
     public void checkCoordinator(String msg){
         node n = getCoordinator();
         if(n == null){
@@ -313,6 +316,7 @@ public class server {
         }else{
             msgText+="<h3 style=\"margin-right:150px;background-color:#636e72;color:#fff;padding:5px;\">"+msg+"</h3>";
         }
+        pane.setText("");
         pane.setText("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
                     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                     "<style>body {color: #fff;}</style></head>\n"+"<body>\n" +
@@ -335,7 +339,94 @@ public class server {
         LocalDateTime date = LocalDateTime.now();
         return(String.valueOf(format.format(date)));
     }
-//-----------thread receive
+//-----------#queue #xulyqueue-----------------
+    /*Các request sẽ được chuyển vào 1 queue và xử lý từ từ*/
+    public void queueResolve(){
+        Thread th = new Thread(){
+            public void run(){
+                while(true){
+                    messageQueue = getMessageQueue();
+                    if(messageQueue.peek()!=null){
+                        try {
+                        // xu ly yeu cau chuyen tien
+                        SendMoney tmp = messageQueue.poll();
+                        connectService.sendMoney(tmp.SendId, tmp.ReceiveId, tmp.MoneyValue,tmp.Msg);
+                        System.out.println("#queueResolve : da chuyen tien thanh cong");
+                        for(node n:getListNode()){
+                            if(n.getId()==tmp.SendId){
+                                    Socket socket = new Socket(n.getHost(),n.getPort());
+                                    DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+                                    writer.writeUTF("confirmtransfers");
+                                    tpSettext(textPane,getCurrentTime()+":"+getId()+": "+String.format("Da chuyen %d den %d", tmp.MoneyValue,tmp.ReceiveId));
+                                    writer.close();
+                                    socket.close();
+                            }
+                            if(n.getId() == tmp.ReceiveId){
+                                Socket socket = new Socket(n.getHost(),n.getPort());
+                                DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+                                writer.writeUTF(String.format("receivemoney-%d-%d", tmp.SendId,tmp.MoneyValue));
+                                tpSettext(textPane,getCurrentTime()+":"+getId()+": "+String.format("Da thong bao den %d", tmp.ReceiveId));
+                                writer.close();
+                                socket.close();
+                            }
+                        }
+                        } catch (Exception e) {
+                                    System.out.println("#queueResolve : Khong the tao socket de phan hoi yeu  cau chuyen tien");
+                        }
+                        //#log
+                    }else{
+                        try {
+                            //doi mot transfer request moi den
+                            queueWait();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        };
+        th.start();
+    }
+//-----------send money message----------------
+//#sendmoneyrequest   
+    /*Hàm này sẽ gủi yêu cầu chuyển tiền đến coordinator*/
+    public void sendMoneyRequestToCoordinator(String msg){
+        node n = getCoordinator();
+        if(n == null){
+            System.out.println("checkCoordinator-can't find Coordinator");
+            return;
+        }
+        try {
+            //System.out.println(n.getHost() + n.getPort());
+            Socket socket = new Socket(n.getHost(),n.getPort());
+            DataInputStream reader = new DataInputStream(socket.getInputStream());
+            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+            writer.writeUTF(msg);
+            System.out.println("sendmoneyrequest send - "+msg);
+            String rev = reader.readUTF();
+            System.out.println("sendmoneyrequest receive - "+rev);
+            tpSettext(textPane,getCurrentTime()+":"+n.getId()+": "+rev);
+            reader.close();
+            writer.close();
+            socket.close();
+        } catch (IOException ex) {
+            System.out.println("sendmoneyrequest create socket to server");
+            //0
+            bully(0);
+            //----server khong phan hoi, bat dau chay tien trinh bully----
+            return;
+        }
+    }
+//-----------#synchronized #queue--------------
+    /*Hai cái này dùng để xử lý Thread xử lý queue chuyển tiền*/
+    synchronized void queueWait() throws InterruptedException{
+        wait();
+    }
+    synchronized void queueNotyfi(){
+        notifyAll();
+    }
+    
+//-----------thread receive request---------------------
     public void receive(Socket socket){
         Thread th = new Thread(){
           public void run(){
@@ -345,6 +436,12 @@ public class server {
             //while(true){
                 String msg = reader.readUTF();
                 String [] list = msg.split("-");
+                //TH lời nhắn gửi tiền có chứa kí tự -
+                if(list.length>5){
+                    for(int i=5;i<=list.length;i++){
+                        list[4]+=list[i];
+                    }
+                }
                 switch(list[0]){
                     case "check":
                         tpSettext(textPane,getCurrentTime()+":"+list[1]+": "+msg);
@@ -452,14 +549,30 @@ public class server {
                         listNode.set(f, ntmp);
                         ntmp = listNode.get(t);ntmp.setIsAdmin(true);
                         listNode.set(t, ntmp);
-                        tfMsg.setText("");
-                        tfMsg.setEditable(true);
-                        btnCheckCoor.setEnabled(true);
                         //flagBully=false;
                         JOptionPane.showMessageDialog(mainFrame, "Coordinator có id: "+list[1]);
                         break;
                     case "message":
                         tpSetMessage(tpChatbox, list[1]+" : "+list[2], 1);
+                        break;
+                    case "transfers":
+                        /*Yêu cầu chuyển tiền*/
+                        writer.writeUTF("coordinator da nhan yeu cau chuyen tien");
+                        SendMoney tmp = new SendMoney(Integer.parseInt(list[1]),Integer.parseInt(list[2]),Integer.parseInt(list[3]),list[4]);
+                        messageQueue.add(tmp);
+                        queueNotyfi();
+                        break;
+                    case "confirmtransfers":
+                        /*Nhận được response chuyển tiền thành công*/
+                        tpSetMessage(tpChatbox, getCurrentTime()+": Chuyển tiền thành công!", 1);
+                        JOptionPane.showMessageDialog(mainFrame, "Chuyển tiền thành công!");
+                        tfMsg.setText(String.valueOf(connectService.getAccountMoney(Id)));
+                        break;
+                    case "receivemoney":
+                        /*Nhận được response vừa nhận được tiền từ chỗ khác*/
+                        tpSetMessage(tpChatbox, getCurrentTime()+": Vừa nhận được tiền", 1);
+                        JOptionPane.showMessageDialog(mainFrame, String.format("Bạn vừa nhận được %s từ %s", list[2],list[1]));
+                        tfMsg.setText(String.valueOf(connectService.getAccountMoney(Id)));
                         break;
                     default:
                         break;
