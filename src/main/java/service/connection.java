@@ -22,7 +22,7 @@ import model.HistoryTransactionModel;
  * @author Admin
  */
 public class connection {
-    private String connectUrl = "jdbc:sqlserver://localhost;database=CACHETHONGPHANTAN;username=sa;password=123";
+    private String connectUrl = "jdbc:sqlserver://127.0.0.1:1433;database=CACHETHONGPHANTAN;username=AdminCacHeThongPhanTan;password=123";
     private Connection conn;
     public connection(){
         try {
@@ -101,6 +101,6 @@ public class connection {
     }
     public static void main(String[] args) {
         connection co = new connection();
-        co.sendMoney(0, 1, 100, "chuyen");
+        System.out.println("tai khoan: "+co.getAccountMoney(1));;
     }
 }

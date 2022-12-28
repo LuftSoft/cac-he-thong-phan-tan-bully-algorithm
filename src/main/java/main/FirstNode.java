@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 package main;
+
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import javax.swing.*;
 import java.net.*;
@@ -13,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.node;
 import model.server;
+
 /**
  *
  * @author Admin
@@ -23,6 +26,7 @@ public class FirstNode extends javax.swing.JFrame {
     //form lịch sử
     private boolean formHistory = false;
     JFrame historyTransactFrame = null;
+
     public FirstNode() {
         this.setTitle("FirstNode");
         initComponents();
@@ -38,13 +42,13 @@ public class FirstNode extends javax.swing.JFrame {
         //Chinh sua form
         JFrame tmp = this;
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(new WindowAdapter(){
+        this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent){
-                if (JOptionPane.showConfirmDialog(tmp, 
-                    "Bạn chắc chắn muốn thoát?", "Thoát chương trình?", 
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(tmp,
+                        "Bạn chắc chắn muốn thoát?", "Thoát chương trình?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     System.out.println("thoat");
                     try {
                         //---co the ghi lai log tai day
@@ -57,6 +61,7 @@ public class FirstNode extends javax.swing.JFrame {
             }
         });
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -287,33 +292,30 @@ public class FirstNode extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        if(this.tfPort.equals("")){
+        if (this.tfPort.equals("")) {
             JOptionPane.showMessageDialog(this, "please type number of server port", "warning", JOptionPane.WARNING_MESSAGE);
-        }
-        else{
+        } else {
             //#sua
-            this.sv = new server(this,3000,0,this.tpLog,this.tpChatbox,this.tfAccountMoney,this.btnSendMoney);
-            for(int i=0;i<5;i++){
-                if(i!=this.sv.getId()){
+            this.sv = new server(this, 3000, 0, this.tpLog, this.tpChatbox, this.tfAccountMoney, this.btnSendMoney);
+            for (int i = 0; i < 5; i++) {
+                if (i != this.sv.getId()) {
                     this.cbReceiveMoneyId.addItem(String.valueOf(i));
                 }
             }
-            
+
             this.sv.execute();
-            this.lbServerStatus.setText("server is running on port "+tfPort.getText());
+            this.lbServerStatus.setText("server is running on port " + tfPort.getText());
             this.btnConnect.setEnabled(false);
             node n = this.sv.getCoordinator();
-            if(n == null){
-                for(node item:sv.getListNode()){
-                    
+            if (n == null) {
+                for (node item : sv.getListNode()) {
+
                 }
                 sv.bully(3);
-            }
-            else if(n.getId() == this.sv.getId()){
+            } else if (n.getId() == this.sv.getId()) {
                 System.out.println("Day chinh la dieu phoi vien");
-            }
-            else{
-                JOptionPane.showMessageDialog(this, "Coordinator có id: "+n.getId(), "Thông báo", JOptionPane.DEFAULT_OPTION);
+            } else {
+                JOptionPane.showMessageDialog(this, "Coordinator có id: " + n.getId(), "Thông báo", JOptionPane.DEFAULT_OPTION);
                 //#sua
             }
             this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
@@ -323,24 +325,23 @@ public class FirstNode extends javax.swing.JFrame {
             this.btnSendMoney.setEnabled(true);
             this.btnOpenHistoryTransact.setEnabled(true);
         }
-        
-        
+
+
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void btnSendMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMoneyActionPerformed
-         node n = this.sv.getCoordinator();
-         //#sua
-        if(this.tfMoneyValue.getText().equals("")){
+        node n = this.sv.getCoordinator();
+        //#sua
+        if (this.tfMoneyValue.getText().equals("")) {
             System.out.println("input is empty");
             return;
         }
-        if(n == null){
+        if (n == null) {
             sv.bully(3);
             System.out.println("Coordinator is null");
             return;
-        }
-        else{
-            int revId,money;
+        } else {
+            int revId, money;
             String msg;
             try {
                 revId = Integer.valueOf(this.cbReceiveMoneyId.getSelectedItem().toString());
@@ -351,11 +352,11 @@ public class FirstNode extends javax.swing.JFrame {
             try {
                 money = Integer.valueOf(this.tfMoneyValue.getText().trim());
                 int cash = this.sv.connectService.getAccountMoney(sv.getId());
-                if(money<0){
+                if (money < 0) {
                     lbWarningMoney.setText("Số tiền muốn gửi phải lớn hơn 0");
                     return;
                 }
-                if(money>cash){
+                if (money > cash) {
                     lbWarningMoney.setText("Số tiền muốn gửi lớn hơn tài khoản hiện có");
                     return;
                 }
@@ -363,13 +364,17 @@ public class FirstNode extends javax.swing.JFrame {
                 lbWarningMoney.setText("Số tiền muốn gửi không đúng định dạng");
                 return;
             }
+            if(tfMoneyMessage.getText().trim().equals("")){
+                lbWarningMsg.setText("Lời nhắn không được để trống");
+                return;
+            }
             msg = tfMoneyMessage.getText().trim();
             //#sendMoney because you are coordinator now
-            if(n.getId() == sv.getId()){
+            if (n.getId() == sv.getId()) {
                 //tu chuyen tien
                 sv.connectService.sendMoney(sv.getId(), revId, money, msg);
-                sv.tpSettext(tpLog, String.format(sv.getCurrentTime()+":"+n.getId()+": Đã chuyển %d đến %d", money,revId));
-                sv.tpSetMessage(tpChatbox, sv.getCurrentTime()+": Chuyển tiền thành công!", 0);
+                sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + ": Đã chuyển %d đến %d", money, revId));
+                sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Chuyển tiền thành công!", 0);
                 JOptionPane.showMessageDialog(this, "Chuyển tiền thành công!");
                 cbReceiveMoneyId.setSelectedIndex(0);
                 tfMoneyMessage.setText("");
@@ -378,10 +383,22 @@ public class FirstNode extends javax.swing.JFrame {
                 lbWarningMoney.setText("");
                 lbWarningMsg.setText("");
                 this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
+                try {
+                    for (node i : sv.getListNode()) {
+                        if (i.getId() == revId) {
+                            Socket socket = new Socket(i.getHost(), i.getPort());
+                            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+                            writer.writeUTF(String.format("receivemoney-%d-%d", sv.getId(), money));
+                            writer.close();
+                            socket.close();
+                        }
+                    }
+                } catch (Exception e) {
+                }
                 return;
             }
             //#sendrequesttocoordinator
-            String reqMsg = String.format("transfers-%d-%d-%d-%s",sv.getId(),revId,money,msg);
+            String reqMsg = String.format("transfers-%d-%d-%d-%s", sv.getId(), revId, money, msg);
             sv.sendMoneyRequestToCoordinator(reqMsg);
             //gui yeu cau chuyen tien
             cbReceiveMoneyId.setSelectedIndex(0);
@@ -390,8 +407,8 @@ public class FirstNode extends javax.swing.JFrame {
             lbWarningCb.setText("");
             lbWarningMoney.setText("");
             lbWarningMsg.setText("");
-            sv.tpSettext(tpLog, String.format(sv.getCurrentTime()+":"+n.getId()+"Da gui yeu cau chuyen %d den %d", money,revId));
-            sv.tpSetMessage(tpChatbox, sv.getCurrentTime()+": Đã gửi yêu cầu chuyển tiền!", 0);
+            sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + "Da gui yeu cau chuyen %d den %d", money, revId));
+            sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Đã gửi yêu cầu chuyển tiền!", 0);
             //JOptionPane.showMessageDialog(this, "Đã gửi yêu cầu chuyển tiền", "Thông báo",JOptionPane.DEFAULT_OPTION);
         }
     }//GEN-LAST:event_btnSendMoneyActionPerformed
@@ -405,12 +422,11 @@ public class FirstNode extends javax.swing.JFrame {
     }//GEN-LAST:event_tfMoneyMessageActionPerformed
 
     private void btnOpenHistoryTransactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenHistoryTransactActionPerformed
-        if(!formHistory){
-            if(historyTransactFrame!=null) {historyTransactFrame.setVisible(true);return;}
+        if (!formHistory) {
             historyTransactFrame = new HistoryTransaction(sv.getId());
             historyTransactFrame.setVisible(true);
             historyTransactFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        }else{
+        } else {
             historyTransactFrame.setFocusable(true);
         }
     }//GEN-LAST:event_btnOpenHistoryTransactActionPerformed

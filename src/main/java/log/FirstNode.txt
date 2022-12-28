@@ -332,3 +332,121 @@
 
 
 
+09:54:42 24/12/2022:2: coordinator-2
+10:36:22 24/12/2022:2: coordinator da nhan yeu cau chuyen tien
+10:36:22 24/12/2022:2Da gui yeu cau chuyen 100 den 1
+
+10:42:10 24/12/2022:2: coordinator da nhan yeu cau chuyen tien
+10:42:10 24/12/2022:2Da gui yeu cau chuyen 8 den 1
+
+17:57:06 27/12/2022:1: coordinator-1
+17:57:41 27/12/2022:2: coordinator-2
+17:58:35 27/12/2022:1: coordinator-1
+17:58:38 27/12/2022:2: coordinator-2
+17:59:58 27/12/2022:2: coordinator-2
+18:00:29 27/12/2022:1: coordinator-1
+18:01:18 27/12/2022:1: coordinator-1
+18:01:36 27/12/2022:2: coordinator-2
+
+
+18:04:21 27/12/2022:2: coordinator-2
+18:05:01 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:05:01 27/12/2022:2Da gui yeu cau chuyen 111 den 2
+18:06:17 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:06:17 27/12/2022:2Da gui yeu cau chuyen 11 den 1
+18:07:14 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:07:14 27/12/2022:2Da gui yeu cau chuyen 11 den 2
+18:07:44 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:07:44 27/12/2022:2Da gui yeu cau chuyen 5 den 2
+18:08:06 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:08:06 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+18:08:15 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:08:15 27/12/2022:2Da gui yeu cau chuyen 11 den 1
+18:08:53 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:08:53 27/12/2022:2Da gui yeu cau chuyen 12 den 2
+
+18:17:50 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:17:50 27/12/2022:2Da gui yeu cau chuyen 1 den 2
+18:18:04 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:18:04 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+18:18:31 27/12/2022:1: answer-1
+18:18:43 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+18:18:44 27/12/2022:1: coordinator-1
+18:18:53 27/12/2022:1: coordinator da nhan yeu cau chuyen tien
+18:18:53 27/12/2022:1Da gui yeu cau chuyen 1 den 1
+18:19:55 27/12/2022:2: coordinator-2
+
+18:23:24 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:23:24 27/12/2022:2Da gui yeu cau chuyen 1 den 2
+18:24:56 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:24:56 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+18:25:07 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:25:07 27/12/2022:2Da gui yeu cau chuyen 1 den 2
+
+18:25:28 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:25:28 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+
+18:31:33 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:31:33 27/12/2022:2Da gui yeu cau chuyen 1 den 2
+18:31:54 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:31:54 27/12/2022:2Da gui yeu cau chuyen 1 den 2
+18:32:08 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:32:08 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+18:32:50 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:32:50 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+18:33:06 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:33:06 27/12/2022:2Da gui yeu cau chuyen 1 den 1
+
+18:41:15 27/12/2022:0: ?ã chuy?n 1 ??n 2
+18:41:31 27/12/2022:0: ?ã chuy?n 11 ??n 2
+
+18:44:05 27/12/2022:2: coordinator-2
+
+18:45:03 27/12/2022:2: coordinator da nhan yeu cau chuyen tien
+18:45:03 27/12/2022:2Da gui yeu cau chuyen 1 den 2
+
+
+
+09:44:46 28/12/2022:2: coordinator-2
+09:45:04 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:45:04 28/12/2022:2Da gui yeu cau chuyen 253 den 2
+
+09:45:04 28/12/2022:28: Vua nhan duoc 253 dong tu id: 0
+09:45:18 28/12/2022:2: ?ã chuy?n 22 ??n 0
+09:48:28 28/12/2022:2: ?ã chuy?n 1 ??n 0
+
+09:50:30 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:50:30 28/12/2022:2Da gui yeu cau chuyen 23 den 1
+09:51:03 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:51:03 28/12/2022:2Da gui yeu cau chuyen 1 den 2
+09:51:45 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:51:45 28/12/2022:2Da gui yeu cau chuyen 98 den 2
+09:52:02 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:52:02 28/12/2022:2Da gui yeu cau chuyen 1 den 1
+
+09:50:14 28/12/2022:2: ?ã chuy?n 99 ??n 0
+09:50:42 28/12/2022:2: ?ã chuy?n 1 ??n 1
+09:51:03 28/12/2022:36: Vua nhan duoc 1 dong tu id: 0
+09:51:08 28/12/2022:2: ?ã chuy?n 11 ??n 0
+09:51:45 28/12/2022:32: Vua nhan duoc 98 dong tu id: 0
+09:51:54 28/12/2022:2: ?ã chuy?n 100 ??n 0
+
+09:54:16 28/12/2022:2: coordinator-2
+09:54:44 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:54:44 28/12/2022:2Da gui yeu cau chuyen 87 den 2
+
+09:54:23 28/12/2022:2: ?ã chuy?n 87 ??n 0
+09:54:24 28/12/2022:27: Vua nhan 87 tu 2
+09:54:44 28/12/2022:28: Vua nhan duoc 87 dong tu id: 0
+09:54:52 28/12/2022:2: ?ã chuy?n 1 ??n 0
+09:54:53 28/12/2022:31: Vua nhan 1 tu 2
+
+09:56:06 28/12/2022:2: coordinator-2
+09:56:19 28/12/2022:2: coordinator da nhan yeu cau chuyen tien
+09:56:19 28/12/2022:2Da gui yeu cau chuyen 111 den 2
+09:56:29 28/12/2022:31: Vua nhan 97 tu 2
+
+09:56:19 28/12/2022:28: Vua nhan duoc 111 dong tu id: 0
+09:56:28 28/12/2022:2: ?ã chuy?n 97 ??n 0
+
+
